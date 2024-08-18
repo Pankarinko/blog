@@ -1,13 +1,31 @@
 body {
-    color: rgb(147, 182, 171);
-    background-color: #300327;
-    margin-right: 50px;
-    margin-left: 50px;
+    color: #a8cdc1;
+    background-color: #21031b;
+    padding-right: 320px;
+    padding-left: 320px;
     font-family: 'NeomatrixCodeRegular';
     font-weight: normal;
+    font-size: 20px;
     font-style: normal;
 }
 
 h1 {
-    color: #c772ac;
+    text-align: center;
+    color: #a8cdc1;
+}
+
+h2 {
+    text-align: center;
+    font-size: 36px;
+    color: #f3fa9e;
+}
+
+/* unvisited link */
+a:link {
+    color: #a9e0e7;
+}
+
+/* visited link */
+a:visited {
+    color: #69bcc7;
 }
