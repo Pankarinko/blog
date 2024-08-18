@@ -1,0 +1,13 @@
+body {
+    color: rgb(147, 182, 171);
+    background-color: #300327;
+    margin-right: 50px;
+    margin-left: 50px;
+    font-family: 'NeomatrixCodeRegular';
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1 {
+    color: #c772ac;
+}

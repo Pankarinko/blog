@@ -1,0 +1,57 @@
+<p><link rel="stylesheet" href="blog.css" />
+<link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/neomatrixcode" type="text/css"/></p>
+<h1 id="os-blog">OS Blog</h1>
+<p>I set out to write a simple operating system for RISCV just for fun.
+This blog describes all the steps (and missteps) I took</p>
+<h2 id="how-i-got-started">How I got started</h2>
+<p>Since I only came up with the idea of this blog after I already did
+some things - mainly to motivate myself - I will try to remember and
+summarize what I did.</p>
+<h3 id="linker-script">Linker Script</h3>
+<p>This was the first and unfortunately most fucked up part of the whole
+thing so far. Here is the code I have so far in teh <em>script.ld</em>
+file:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ENTRY<span class="op">(</span>asm_entry<span class="op">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>OUTPUT_ARCH<span class="op">(</span>riscv<span class="op">)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>MEMORY <span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    RAM <span class="op">(</span>rwx<span class="op">)</span> <span class="op">:</span> org <span class="op">=</span> <span class="bn">0x80000000</span><span class="op">,</span> len <span class="op">=</span> <span class="dv">1</span><span class="er">M</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>PHDRS <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  text PT_LOAD<span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>SECTIONS <span class="op">{</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a> <span class="op">.</span>text <span class="op">:</span> <span class="op">{</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span> <span class="op">=</span> ALIGN<span class="op">(</span><span class="dv">8</span><span class="op">);</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    PROVIDE<span class="op">(</span>startkernel <span class="op">=</span> <span class="op">.);</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">*(.</span>text<span class="op">)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">*(.</span>text<span class="op">*)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    PROVIDE<span class="op">(</span>endkernel <span class="op">=</span> <span class="op">.);</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a> <span class="op">}</span> <span class="op">&gt;</span> RAM <span class="op">:</span> text</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="now-the-explanation">Now the explanation:</h4>
+<p>The first line tells the linker that the code starts at the label
+<em>asm_entry (found in entry.S)</em> The second line the architecture
+to RISCV.</p>
+<p>In the <strong>MEMORY</strong> section, I define all addressess above
+0x80000000 as RAM. This is the address from which the RISCV architecture
+allows the OS and user space programs to use memory - everything smaller
+than this address is mapped to some device. My RAM is readable, writable
+and executable (rwx) however at this point I know I will probably need
+to define a new memory section that is not writable for the kernel,
+because kernel code shouldn’t reside in writable memory.</p>
+<p><strong>PHDRS</strong> defines ELF program headers <em>(see also <a
+href="https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_node/ld_23.html">here</a></em>.
+I only have one memory segment so far, <em>.text</em>. <em>PT_LOAD</em>
+means, that this segment has to be loaded from a file.</p>
+<p>The <strong>SECTIONS</strong> part describes all the segments our
+memory will have. Again, at this point I only have some kernel code so I
+only have the <em>.text</em> segment, where the kernel code is. The
+address of the beginning of this segment is saved into the variable
+<em>startkernel</em>, the address of the end is saved into the variable
+<em>endkernel</em>. These variables will be used in the C-code later.
+The segment is aligned by 8 Bytes because I write this OS for RISCV64.
+<em>.text</em> will be placed in the RAM memory section.</p>
