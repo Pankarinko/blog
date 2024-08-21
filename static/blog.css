@@ -1,9 +1,20 @@
+@font-face {
+    font-family: 'Philosopher';
+    src: url('/philosopher/Philosopher-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Philosopher';
+    src: url('/philosopher/Philosopher-Italic.ttf') format('truetype');
+    font-style: italic;
+}
+
 body {
     color: #a8cdc1;
     background-color: #21031b;
     padding-right: 320px;
     padding-left: 320px;
-    font-family: 'NeomatrixCodeRegular';
+    font-family: 'Philosopher';
     font-weight: normal;
     font-size: 20px;
     font-style: normal;
