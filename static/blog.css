@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'Philosopher';
-    src: url('/philosopher/Philosopher-Regular.ttf') format('truetype');
+    src: url('philosopher/Philosopher-Regular.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Philosopher';
-    src: url('/philosopher/Philosopher-Italic.ttf') format('truetype');
+    src: url('philosopher/Philosopher-Italic.ttf') format('truetype');
     font-style: italic;
 }
 
