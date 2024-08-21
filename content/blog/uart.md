@@ -8,13 +8,13 @@ date = 2024-08-19
 ## UART
 
 
-First off, it really wasnt't that easy to find material on UART. I made everything using [this blog](https://www.lammertbies.nl/comm/info/serial-uart) and [this data sheet](http://byterunner.com/16550.html). Here I will summerize, which parts of these I needed.
+First off, it really wasnt't that easy to find material on UART. I made everything using [this blog](https://www.lammertbies.nl/comm/info/serial-uart). Here I will summerize, which parts of these I needed.
 
 ### Why do I use UART?
 For programming an operating system, I need to be able to communicate with it. For that, I need some form of output. Without output it is really hard to debug anything, so I dealt with this problem first. UART is a protocol for communication between devices. Since I use QEMU as my RISCV emulator and QEMU already supports UART, I just use UART as well. Besides, UART is less complicated to implement than other communication protocols. 
 
 ### What I did
-UART operates with the 8 registers, found in this table:
+UART operates with the 8 registers, found in this table ([source](https://www.lammertbies.nl/comm/info/serial-uart)):
 
 | Address   | Read     | Write      |
 |:----------|:---------|:-----------|

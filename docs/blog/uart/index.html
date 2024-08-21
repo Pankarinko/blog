@@ -17,11 +17,11 @@
 <p class="subtitle"><strong>2024-08-19</strong></p>
 <h1 id="chapter-two">Chapter Two</h1>
 <h2 id="uart">UART</h2>
-<p>First off, it really wasnt't that easy to find material on UART. I made everything using <a href="https://www.lammertbies.nl/comm/info/serial-uart">this blog</a> and <a href="http://byterunner.com/16550.html">this data sheet</a>. Here I will summerize, which parts of these I needed.</p>
+<p>First off, it really wasnt't that easy to find material on UART. I made everything using <a href="https://www.lammertbies.nl/comm/info/serial-uart">this blog</a>. Here I will summerize, which parts of these I needed.</p>
 <h3 id="why-do-i-use-uart">Why do I use UART?</h3>
 <p>For programming an operating system, I need to be able to communicate with it. For that, I need some form of output. Without output it is really hard to debug anything, so I dealt with this problem first. UART is a protocol for communication between devices. Since I use QEMU as my RISCV emulator and QEMU already supports UART, I just use UART as well. Besides, UART is less complicated to implement than other communication protocols.</p>
 <h3 id="what-i-did">What I did</h3>
-<p>UART operates with the 8 registers, found in this table:</p>
+<p>UART operates with the 8 registers, found in this table (<a href="https://www.lammertbies.nl/comm/info/serial-uart">source</a>):</p>
 <table><thead><tr><th style="text-align: left">Address</th><th style="text-align: left">Read</th><th style="text-align: left">Write</th></tr></thead><tbody>
 <tr><td style="text-align: left">base</td><td style="text-align: left">RBR receiver buffer</td><td style="text-align: left">THR transmitter holding</td></tr>
 <tr><td style="text-align: left">base+1</td><td style="text-align: left">IER interrupt enable</td><td style="text-align: left">IER interrupt enable</td></tr>

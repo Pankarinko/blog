@@ -54,3 +54,17 @@ pre {
     overflow: auto;
     background-color: #2c282c !important;
 }
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #a8cdc1;
+    border-right:  1px solid #a8cdc1;
+    border-left:  1px solid #a8cdc1;
+}
+
+th {
+    background-color: #a8cdc1;
+    color: #21031b;
+}
+
