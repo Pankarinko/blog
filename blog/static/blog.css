@@ -20,6 +20,12 @@ h2 {
     color: #f3fa9e;
 }
 
+h3 {
+    padding: 30px;
+    font-size: 26px;
+    color: #f3fa9e;
+}
+
 /* unvisited link */
 a:link {
     color: #a9e0e7;

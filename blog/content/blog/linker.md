@@ -1,5 +1,8 @@
-<link rel="stylesheet" href="blog.css" />
-<link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/neomatrixcode" type="text/css"/> 
++++
+title = "Linker"
+date = 2024-06-07
++++
+ 
 
 # OS Blog
 
@@ -11,9 +14,9 @@ Since I only came up with the idea of this blog after I already did some things 
 
 ### Linker Script
 
-This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in teh *script.ld* file:
+This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in the *script.ld* file:
 
-```{.c}
+```css
 ENTRY(asm_entry)
 OUTPUT_ARCH(riscv)
 
