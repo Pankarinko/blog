@@ -16,7 +16,7 @@ Since I only came up with the idea of this blog after I already did some things 
 
 This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in the *script.ld* file:
 
-```css
+```ld
 ENTRY(asm_entry)
 OUTPUT_ARCH(riscv)
 

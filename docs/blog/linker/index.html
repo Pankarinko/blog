@@ -21,26 +21,26 @@
 <p>Since I only came up with the idea of this blog after I already did some things - mainly to motivate myself - I will try to remember and summarize what I did.</p>
 <h3 id="linker-script">Linker Script</h3>
 <p>This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in the <em>script.ld</em> file:</p>
-<pre data-lang="css" style="background-color:#282a36;color:#f8f8f2;" class="language-css "><code class="language-css" data-lang="css"><span>ENTRY(asm_entry)
+<pre data-lang="ld" style="background-color:#393939;color:#dedede;" class="language-ld "><code class="language-ld" data-lang="ld"><span style="color:#fed6af;">ENTRY</span><span>(asm_entry)
 </span><span>OUTPUT_ARCH(riscv)
 </span><span>
-</span><span>MEMORY {
+</span><span style="color:#fed6af;">MEMORY</span><span> {
 </span><span>
-</span><span>    RAM (rwx) : org = </span><span style="color:#bd93f9;">0</span><span>x</span><span style="color:#bd93f9;">80000000</span><span>, len = </span><span style="color:#bd93f9;">1</span><span>M
+</span><span>    RAM (rwx) : org = </span><span style="font-weight:bold;color:#87d6d5;">0x80000000</span><span>, len = </span><span style="font-weight:bold;color:#87d6d5;">1M
 </span><span>}
 </span><span>
 </span><span>PHDRS {
 </span><span>  text PT_LOAD;
 </span><span>}
 </span><span>
-</span><span>SECTIONS {
+</span><span style="color:#fed6af;">SECTIONS</span><span> {
 </span><span> .text : {
-</span><span>    . = ALIGN(</span><span style="color:#bd93f9;">8</span><span>);
+</span><span>    . = </span><span style="color:#fed6af;">ALIGN</span><span>(</span><span style="font-weight:bold;color:#87d6d5;">8</span><span>);
 </span><span>    PROVIDE(startkernel = .);
 </span><span>    *(.text)
 </span><span>    *(.text*)
 </span><span>    PROVIDE(endkernel = .);
-</span><span> } &gt; RAM : </span><span style="color:#ff79c6;">text
+</span><span> } &gt; RAM : text
 </span><span>}
 </span></code></pre>
 <h4 id="now-the-explanation">Now the explanation:</h4>
