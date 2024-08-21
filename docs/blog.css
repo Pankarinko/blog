@@ -46,3 +46,10 @@ a:link {
 a:visited {
     color: #69bcc7;
 }
+
+pre {
+    font-size: 18px;
+    padding: 2rem;
+    overflow: auto;
+    background-color: #2c282c !important;
+}
