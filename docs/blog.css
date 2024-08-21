@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'Philosopher';
+    src: url('/philosopher/Philosopher-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Philosopher';
+    src: url('/philosopher/Philosopher-Italic.ttf') format('truetype');
+    font-style: italic;
+}
+
+body {
+    color: #a8cdc1;
+    background-color: #21031b;
+    padding-right: 320px;
+    padding-left: 320px;
+    font-family: 'Philosopher';
+    font-weight: normal;
+    font-size: 20px;
+    font-style: normal;
+}
+
+h1 {
+    text-align: center;
+    color: #a8cdc1;
+}
+
+h2 {
+    text-align: center;
+    font-size: 36px;
+    color: #f3fa9e;
+}
+
+h3 {
+    padding: 30px;
+    font-size: 26px;
+    color: #f3fa9e;
+}
+
+/* unvisited link */
+a:link {
+    color: #a9e0e7;
+}
+
+/* visited link */
+a:visited {
+    color: #69bcc7;
+}
