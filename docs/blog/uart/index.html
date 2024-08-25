@@ -32,7 +32,7 @@
 <tr><td style="text-align: left">base+6</td><td style="text-align: left">MSR modem status</td><td style="text-align: left">-</td></tr>
 <tr><td style="text-align: left">base+7</td><td style="text-align: left">SCR scratch</td><td style="text-align: left">SCR scratch</td></tr>
 </tbody></table>
-<p>To access the registers, I need to know the base address of the UART-area in my emulator. For QEMU it is address 0x10000000 as seen in the <a href="https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c">official virtual memory layout</a>. The memory lasout is actuallay very important for me in general so I will paste it here:</p>
+<p>To access the registers, I need to know the base address of the UART-area in my emulator. Forthe virt machine in QEMU it is address 0x10000000 as seen in the <a href="https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c">official virt memory layout</a>. The memory layout is actuallay very important for me in general so I will paste it here:</p>
 <pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span>
 </span><span style="color:#fffb9d;">static const</span><span> MemMapEntry virt_memmap[] </span><span style="color:#ececec;">= </span><span>{
 </span><span>    [VIRT_DEBUG] </span><span style="color:#ececec;">=        </span><span>{        </span><span style="font-weight:bold;color:#87d6d5;">0x0</span><span>,         </span><span style="font-weight:bold;color:#87d6d5;">0x100 </span><span>},
@@ -69,6 +69,23 @@
 For the initialization I need the <em>LCR</em> and <em>FCR</em> registers.<br />
 Let's start with the <em>LCR</em>. This register is used solely for initialization. It can be set to transferring, 5,6,7 or 8 Bits at once. I thought setting it to the highest possible data rate -which is conviniently also the size of a byte- would be the best (or at least I think that was my thought process, I'm not sure, it was a while ago.) I also follow the recommendation from the website to use one stop bit and no parity bit. That means the value of LCR is set to 0x03.<br />
 Now for the FCR: this controls the FIFO settings. I combined the two FCR macros from above for this one.</p>
+<p>Outputting a single character is pretty straight-forward: I write the character into the <em>THR</em>.</p>
+<p>Okay so now I can basically output anything. For printing a word, I just iterate thorugh all characters of the word and output the characters separately. This is the code snippet:</p>
+<pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#fffb9d;">void </span><span style="color:#fffd87;">prints</span><span>(</span><span style="color:#fffb9d;">char</span><span style="color:#ececec;">* </span><span>word) {
+</span><span>  </span><span style="color:#fffb9d;">int</span><span> char_count;
+</span><span>  </span><span style="color:#fed6af;">while </span><span>(</span><span style="color:#ececec;">*</span><span>word </span><span style="color:#ececec;">!= </span><span style="color:#d6d6d680;">&#39;</span><span style="font-weight:bold;color:#ff8080;">\0</span><span style="color:#d6d6d680;">&#39;</span><span>) {
+</span><span>    char_count </span><span style="color:#ececec;">= </span><span style="font-weight:bold;color:#87d6d5;">0</span><span>;
+</span><span>    </span><span style="color:#fed6af;">if </span><span>(LSR </span><span style="color:#ececec;">!=</span><span> UART_LSR_THR_EMPTY) {
+</span><span>        </span><span style="color:#fed6af;">while </span><span>(char_count </span><span style="color:#ececec;">&lt; </span><span style="font-weight:bold;color:#87d6d5;">14</span><span>) {
+</span><span>          output_UART((uint8) </span><span style="color:#ececec;">*</span><span>word);
+</span><span>          word</span><span style="color:#ececec;">++</span><span>;
+</span><span>          </span><span style="color:#fed6af;">if </span><span>(</span><span style="color:#ececec;">*</span><span>word </span><span style="color:#ececec;">== </span><span style="color:#d6d6d680;">&#39;</span><span style="font-weight:bold;color:#ff8080;">\0</span><span style="color:#d6d6d680;">&#39;</span><span>) </span><span style="color:#fed6af;">return</span><span>;
+</span><span>            }
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>That's it so far. As you might have noticed, I don't handle user input yet. I will deal with it when I need it.</p>
 
 
         </div>

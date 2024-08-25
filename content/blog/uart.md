@@ -28,7 +28,7 @@ UART operates with the 8 registers, found in this table ([source](https://www.la
 | base+7 | SCR scratch | SCR scratch |
 
 
-To access the registers, I need to know the base address of the UART-area in my emulator. For QEMU it is address 0x10000000 as seen in the [official virtual memory layout](https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c). The memory lasout is actuallay very important for me in general so I will paste it here:
+To access the registers, I need to know the base address of the UART-area in my emulator. Forthe virt machine in QEMU it is address 0x10000000 as seen in the [official virt memory layout](https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c). The memory layout is actuallay very important for me in general so I will paste it here:
 
 ```c
 
@@ -72,5 +72,24 @@ For the initialization I need the *LCR* and *FCR* registers.\
 Let's start with the *LCR*. This register is used solely for initialization. It can be set to transferring, 5,6,7 or 8 Bits at once. I thought setting it to the highest possible data rate -which is conviniently also the size of a byte- would be the best (or at least I think that was my thought process, I'm not sure, it was a while ago.) I also follow the recommendation from the website to use one stop bit and no parity bit. That means the value of LCR is set to 0x03.\
 Now for the FCR: this controls the FIFO settings. I combined the two FCR macros from above for this one.
 
+Outputting a single character is pretty straight-forward: I write the character into the *THR*.
+
+Okay so now I can basically output anything. For printing a word, I just iterate thorugh all characters of the word and output the characters separately. This is the code snippet:
+```c
+void prints(char* word) {
+  int char_count;
+  while (*word != '\0') {
+    char_count = 0;
+    if (LSR != UART_LSR_THR_EMPTY) {
+        while (char_count < 14) {
+          output_UART((uint8) *word);
+          word++;
+          if (*word == '\0') return;
+            }
+        }
+    }
+}
+```
+That's it so far. As you might have noticed, I don't handle user input yet. I will deal with it when I need it.
 
 
