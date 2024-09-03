@@ -1,18 +1,10 @@
 +++
-title = "Linker"
+title = "Chapter One"
 date = 2024-06-07
 +++
  
 
-# OS Blog
-
-I set out to write a simple operating system for RISCV just for fun. This blog describes all the steps (and missteps) I took
-
-## How I got started
-
-Since I only came up with the idea of this blog after I already did some things - mainly to motivate myself - I will try to remember and summarize what I did.
-
-### Linker Script
+## Linker Script
 
 This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in the *script.ld* file:
 

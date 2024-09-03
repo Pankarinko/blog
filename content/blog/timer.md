@@ -1,9 +1,7 @@
 +++
-title = "Timer"
+title = "Chapter Three"
 date = 2024-09-03
 +++
-
-# Chapter 3
 
 ## Timer
 

@@ -1,9 +1,7 @@
 +++
-title = "UART"
+title = "Chapter Two"
 date = 2024-08-19
 +++
-
-# Chapter Two
 
 ## UART
 
