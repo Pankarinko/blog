@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>OS Blog</title>
+    <link rel="stylesheet" href="https://pankarinko.github.io/os-blog/blog.css" />
+</head>
+
+<body>
+    <section class="section">
+        <div class="container">
+            
+<h1 class="title">
+    Timer
+</h1>
+<p class="subtitle"><strong>2024-09-03</strong></p>
+<h1 id="chapter-3">Chapter 3</h1>
+<h2 id="timer">Timer</h2>
+<p>I want to create timer interrupts. To test that I will write a small program to print a sentence every 5 seconds.
+From the <a href="https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc">RISCV ACLINT Specification</a> I know that there is a timer device called MTIMER with one <em>mtime</em> register that counts up with fixed frequnecy. Additionally, MTIMER has <em>mtimecmp</em> registers (one per HART) to set the timer. The value in <em>mtime</em> is always compared to the <em>mtimecmp</em> regoster of the HART - if it is the same or greater, a timer interrupt is triggered. For signalling an interrupt, we have the <em>mip</em> register.</p>
+<p>As for now: the specification says <em>mtime</em> and <em>mtimecmp</em> have different base addresses and I don't know yet where that is because it depends on the architecture so now I go through the code of virt to find it.</p>
+
+
+        </div>
+    </section>
+</body>
+
+</html>
