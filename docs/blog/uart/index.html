@@ -12,10 +12,9 @@
         <div class="container">
             
 <h1 class="title">
-    Chapter Two
+    UART
 </h1>
 <p class="subtitle"><strong>2024-08-19</strong></p>
-<h2 id="uart">UART</h2>
 <p>First off, it really wasnt't that easy to find material on UART. I made everything using <a href="https://www.lammertbies.nl/comm/info/serial-uart">this blog</a> and <a href="http://byterunner.com/16550.html">this data sheet</a>. Here I will summerize, which parts of these I needed.</p>
 <h3 id="why-do-i-use-uart">Why do I use UART?</h3>
 <p>For programming an operating system, I need to be able to communicate with it. For that, I need some form of output. Without output it is really hard to debug anything, so I dealt with this problem first. UART is a protocol for communication between devices. Since I use QEMU as my RISCV emulator and QEMU already supports UART, I just use UART as well. Besides, UART is less complicated to implement than other communication protocols.</p>
@@ -70,7 +69,12 @@ Let's start with the <em>LCR</em>. This register is used solely for initializati
 Now for the FCR: this controls the FIFO settings. I combined the two FCR macros from above for this one.</p>
 <p>Outputting a single character is pretty straight-forward: I write the character into the <em>THR</em>.</p>
 <p>Okay so now I can basically output anything. For printing a word, I just iterate thorugh all characters of the word and output the characters separately. This is the code snippet:</p>
-<pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#fffb9d;">void </span><span style="color:#fffd87;">prints</span><span>(</span><span style="color:#fffb9d;">char</span><span style="color:#ececec;">* </span><span>word) {
+<pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#fffb9d;">void </span><span style="color:#fffd87;">output_UART</span><span>(</span><span style="color:#fffb9d;">char </span><span>c) {
+</span><span>  init_UART();
+</span><span>  THR </span><span style="color:#ececec;">=</span><span> c;
+</span><span>}
+</span><span>
+</span><span style="color:#fffb9d;">void </span><span style="color:#fffd87;">prints</span><span>(</span><span style="color:#fffb9d;">char</span><span style="color:#ececec;">* </span><span>word) {
 </span><span>  </span><span style="color:#fffb9d;">int</span><span> char_count;
 </span><span>  </span><span style="color:#fed6af;">while </span><span>(</span><span style="color:#ececec;">*</span><span>word </span><span style="color:#ececec;">!= </span><span style="color:#d6d6d680;">&#39;</span><span style="font-weight:bold;color:#ff8080;">\0</span><span style="color:#d6d6d680;">&#39;</span><span>) {
 </span><span>    char_count </span><span style="color:#ececec;">= </span><span style="font-weight:bold;color:#87d6d5;">0</span><span>;

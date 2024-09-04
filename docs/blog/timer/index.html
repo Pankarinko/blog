@@ -12,10 +12,9 @@
         <div class="container">
             
 <h1 class="title">
-    Chapter Three
+    Timer
 </h1>
 <p class="subtitle"><strong>2024-09-03</strong></p>
-<h2 id="timer">Timer</h2>
 <p>I want to create timer interrupts. To test that I will write a small program to print a sentence every 5 seconds.
 From the <a href="https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc">RISCV ACLINT Specification</a> I know that there is a timer device called MTIMER with one <em>mtime</em> register that counts up with fixed frequnecy. Additionally, MTIMER has <em>mtimecmp</em> registers (one per HART) to set the timer. The value in <em>mtime</em> is always compared to the <em>mtimecmp</em> register of the HART - if it is the same or greater, a timer interrupt is triggered. For signalling an interrupt, we have the <em>mip</em> register.</p>
 <p>The specification says <em>mtime</em> and <em>mtimecmp</em> have different base addresses and these depend on the architecture. So I looked through the whole <a href="https://github.com/qemu/qemu">QEMU code</a> to find these addresses.</p>

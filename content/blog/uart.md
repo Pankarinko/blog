@@ -1,9 +1,8 @@
 +++
-title = "Chapter Two"
+title = "UART"
 date = 2024-08-19
 +++
 
-## UART
 
 
 First off, it really wasnt't that easy to find material on UART. I made everything using [this blog](https://www.lammertbies.nl/comm/info/serial-uart) and [this data sheet](http://byterunner.com/16550.html). Here I will summerize, which parts of these I needed.
@@ -74,6 +73,11 @@ Outputting a single character is pretty straight-forward: I write the character 
 
 Okay so now I can basically output anything. For printing a word, I just iterate thorugh all characters of the word and output the characters separately. This is the code snippet:
 ```c
+void output_UART(char c) {
+  init_UART();
+  THR = c;
+}
+
 void prints(char* word) {
   int char_count;
   while (*word != '\0') {
