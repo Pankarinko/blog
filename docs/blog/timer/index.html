@@ -14,15 +14,12 @@
 <h1 class="title">
     Timer
 </h1>
-<p class="subtitle"><strong>2024-09-03</strong></p>
+<p class="subtitle"><strong>2024-11-03</strong></p>
 <p>I want to create timer interrupts. To test that I will write a small program to print a sentence every 5 seconds.
-From the <a href="https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc">RISCV ACLINT Specification</a> I know that there is a timer device called MTIMER with one <em>mtime</em> register that counts up with fixed frequnecy. Additionally, MTIMER has <em>mtimecmp</em> registers (one per HART) to set the timer. The value in <em>mtime</em> is always compared to the <em>mtimecmp</em> register of the HART - if it is the same or greater, a timer interrupt is triggered. For signalling an interrupt, we have the <em>mip</em> register.</p>
-<p>The specification says <em>mtime</em> and <em>mtimecmp</em> have different base addresses and these depend on the architecture. So I looked through the whole <a href="https://github.com/qemu/qemu">QEMU code</a> to find these addresses.</p>
-<p>This is what I found: in <code>include/hw/intc/riscv_aclint.h</code>:</p>
-<pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span style="font-weight:bold;color:#87d6d5;">75</span><span style="color:#ececec;">:</span><span>    RISCV_ACLINT_DEFAULT_MTIMECMP      </span><span style="color:#ececec;">= </span><span style="font-weight:bold;color:#87d6d5;">0x0</span><span>,
-</span><span style="font-weight:bold;color:#87d6d5;">76</span><span style="color:#ececec;">:</span><span>    RISCV_ACLINT_DEFAULT_MTIME         </span><span style="color:#ececec;">= </span><span style="font-weight:bold;color:#87d6d5;">0x7ff8</span><span>,
-</span></code></pre>
-<p>which is perfect because it corresponds to the Table 3 and 4 in the RISCV ACLINT Specification. That means that the <em>mtime</em> register is mapped to right after the <em>mtimecmp</em> registers.</p>
+I wasted a lot of time because I thought I need to look in the <a href="https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc">RISCV ACLINT Specification</a>, which was an interesting read but made everything more compplicated. For a simple system, the privilidged ISA contains enaough information.</p>
+<p>So, what we need to know is that there is a memory-mapped <em>mtime</em> register that contains the time and is increments at a constant frequency.
+There is also a memory-mapped <em>mtimecmp</em> register, which can hold a value that will be compared with <em>mtime</em>. If the value in <em>mtimecmp</em> is equal or less than the value in <em>mtime</em>, an interrupt will be triggered. This interrupt will be pending until <em>mtimecmp</em> is greater than <em>mtime</em> again. For this, interrupts need to be enabled.</p>
+<p>First I will try to access <em>mtime</em> just by it's name, without finding out the address, as that's how I understand the example code in the specification.</p>
 
 
         </div>

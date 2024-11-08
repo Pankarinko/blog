@@ -1,17 +1,16 @@
 +++
 title = "Timer"
-date = 2024-09-03
+date = 2024-11-03
 +++
 
 I want to create timer interrupts. To test that I will write a small program to print a sentence every 5 seconds. 
-From the [RISCV ACLINT Specification](https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc) I know that there is a timer device called MTIMER with one *mtime* register that counts up with fixed frequnecy. Additionally, MTIMER has *mtimecmp* registers (one per HART) to set the timer. The value in *mtime* is always compared to the *mtimecmp* register of the HART - if it is the same or greater, a timer interrupt is triggered. For signalling an interrupt, we have the *mip* register.
+I wasted a lot of time because I thought I need to look in the [RISCV ACLINT Specification](https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc), which was an interesting read but made everything more compplicated. For a simple system, the privilidged ISA contains enaough information.
 
-The specification says *mtime* and *mtimecmp* have different base addresses and these depend on the architecture. So I looked through the whole [QEMU code](https://github.com/qemu/qemu) to find these addresses.
+So, what we need to know is that there is a memory-mapped *mtime* register that contains the time and is increments at a constant frequency. 
+There is also a memory-mapped *mtimecmp* register, which can hold a value that will be compared with *mtime*. If the value in *mtimecmp* is equal or less than the value in *mtime*, an interrupt will be triggered. This interrupt will be pending until *mtimecmp* is greater than *mtime* again. For this, interrupts need to be enabled.
 
-This is what I found: in `include/hw/intc/riscv_aclint.h`: 
-```c
-75:    RISCV_ACLINT_DEFAULT_MTIMECMP      = 0x0,
-76:    RISCV_ACLINT_DEFAULT_MTIME         = 0x7ff8,
-```
+First I will try to access *mtime* just by it's name, without finding out the address, as that's how I understand the example code in the specification.
 
-which is perfect because it corresponds to the Table 3 and 4 in the RISCV ACLINT Specification. That means that the *mtime* register is mapped to right after the *mtimecmp* registers.
+
+
+
