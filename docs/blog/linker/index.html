@@ -8,6 +8,13 @@
 </head>
 
 <body>
+    <div class="sidebar">
+        <div> 
+            <a href="https://pankarinko.github.io/os-blog/." style="text-decoration:none"<span class="button">Profile</span></a>
+            <a href="https://pankarinko.github.io/os-blog/blog" style="text-decoration:none"<span class="button">Contents</span></a>
+        </div>
+        <span class="button" onclick="switch_mode()">Switch Mode</span>
+    </div>
     <section class="section">
         <div class="container">
             
@@ -16,25 +23,25 @@
 </h1>
 <p class="subtitle"><strong>2024-06-07</strong></p>
 <p>This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in the <em>script.ld</em> file:</p>
-<pre data-lang="ld" style="background-color:#393939;color:#dedede;" class="language-ld "><code class="language-ld" data-lang="ld"><span style="color:#fed6af;">ENTRY</span><span>(asm_entry)
+<pre data-lang="ld" style="background-color:#2e3440;color:#d8dee9;" class="language-ld "><code class="language-ld" data-lang="ld"><span style="color:#81a1c1;">ENTRY</span><span>(asm_entry)
 </span><span>OUTPUT_ARCH(riscv)
 </span><span>
-</span><span style="color:#fed6af;">MEMORY</span><span> {
+</span><span style="color:#81a1c1;">MEMORY</span><span> {
 </span><span>
-</span><span>    RAM (rwx) : org = </span><span style="font-weight:bold;color:#87d6d5;">0x80000000</span><span>, len = </span><span style="font-weight:bold;color:#87d6d5;">1M
+</span><span>    RAM (rwx) : org = </span><span style="color:#b48ead;">0x80000000</span><span>, len = </span><span style="color:#b48ead;">1M
 </span><span>}
 </span><span>
 </span><span>PHDRS {
 </span><span>  text PT_LOAD;
 </span><span>}
 </span><span>
-</span><span style="color:#fed6af;">SECTIONS</span><span> {
+</span><span style="color:#81a1c1;">SECTIONS</span><span> {
 </span><span> .text : {
-</span><span>    . = </span><span style="color:#fed6af;">ALIGN</span><span>(</span><span style="font-weight:bold;color:#87d6d5;">8</span><span>);
-</span><span>    PROVIDE(startkernel = .);
+</span><span>    </span><span style="color:#81a1c1;">.</span><span> = </span><span style="color:#81a1c1;">ALIGN</span><span>(</span><span style="color:#b48ead;">8</span><span>);
+</span><span>    PROVIDE(startkernel = </span><span style="color:#81a1c1;">.</span><span>);
 </span><span>    *(.text)
 </span><span>    *(.text*)
-</span><span>    PROVIDE(endkernel = .);
+</span><span>    PROVIDE(endkernel = </span><span style="color:#81a1c1;">.</span><span>);
 </span><span> } &gt; RAM : text
 </span><span>}
 </span></code></pre>
@@ -48,6 +55,24 @@ The second line the architecture to RISCV.</p>
 
         </div>
     </section>
+    <script>
+        function switch_mode() {
+            var element = document.querySelector("body"); 
+            element.style.transition = "all 0.4s ease";
+            if (document.body.classList.toggle('dark_mode')) {
+                localStorage.setItem('mode', 'dark');
+            } else {
+                localStorage.setItem('mode', 'light');
+            }
+        }
+        if (localStorage.getItem("mode") === "dark") {
+            document.body.classList.toggle('dark_mode');
+        } else if (localStorage.getItem("mode") === null) {
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.toggle('dark_mode');
+            }
+        }
+    </script>
 </body>
 
 </html>

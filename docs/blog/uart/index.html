@@ -8,6 +8,13 @@
 </head>
 
 <body>
+    <div class="sidebar">
+        <div> 
+            <a href="https://pankarinko.github.io/os-blog/." style="text-decoration:none"<span class="button">Profile</span></a>
+            <a href="https://pankarinko.github.io/os-blog/blog" style="text-decoration:none"<span class="button">Contents</span></a>
+        </div>
+        <span class="button" onclick="switch_mode()">Switch Mode</span>
+    </div>
     <section class="section">
         <div class="container">
             
@@ -31,36 +38,36 @@
 <tr><td style="text-align: left">base+7</td><td style="text-align: left">SCR scratch</td><td style="text-align: left">SCR scratch</td></tr>
 </tbody></table>
 <p>To access the registers, I need to know the base address of the UART-area in my emulator. Forthe virt machine in QEMU it is address 0x10000000 as seen in the <a href="https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c">official virt memory layout</a>. The memory layout is actuallay very important for me in general so I will paste it here:</p>
-<pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span>
-</span><span style="color:#fffb9d;">static const</span><span> MemMapEntry virt_memmap[] </span><span style="color:#ececec;">= </span><span>{
-</span><span>    [VIRT_DEBUG] </span><span style="color:#ececec;">=        </span><span>{        </span><span style="font-weight:bold;color:#87d6d5;">0x0</span><span>,         </span><span style="font-weight:bold;color:#87d6d5;">0x100 </span><span>},
-</span><span>    [VIRT_MROM] </span><span style="color:#ececec;">=         </span><span>{     </span><span style="font-weight:bold;color:#87d6d5;">0x1000</span><span>,        </span><span style="font-weight:bold;color:#87d6d5;">0xf000 </span><span>},
-</span><span>    [VIRT_TEST] </span><span style="color:#ececec;">=         </span><span>{   </span><span style="font-weight:bold;color:#87d6d5;">0x100000</span><span>,        </span><span style="font-weight:bold;color:#87d6d5;">0x1000 </span><span>},
-</span><span>    [VIRT_RTC] </span><span style="color:#ececec;">=          </span><span>{   </span><span style="font-weight:bold;color:#87d6d5;">0x101000</span><span>,        </span><span style="font-weight:bold;color:#87d6d5;">0x1000 </span><span>},
-</span><span>    [VIRT_CLINT] </span><span style="color:#ececec;">=        </span><span>{  </span><span style="font-weight:bold;color:#87d6d5;">0x2000000</span><span>,       </span><span style="font-weight:bold;color:#87d6d5;">0x10000 </span><span>},
-</span><span>    [VIRT_ACLINT_SSWI] </span><span style="color:#ececec;">=  </span><span>{  </span><span style="font-weight:bold;color:#87d6d5;">0x2F00000</span><span>,        </span><span style="font-weight:bold;color:#87d6d5;">0x4000 </span><span>},
-</span><span>    [VIRT_PCIE_PIO] </span><span style="color:#ececec;">=     </span><span>{  </span><span style="font-weight:bold;color:#87d6d5;">0x3000000</span><span>,       </span><span style="font-weight:bold;color:#87d6d5;">0x10000 </span><span>},
-</span><span>    [VIRT_PLATFORM_BUS] </span><span style="color:#ececec;">= </span><span>{  </span><span style="font-weight:bold;color:#87d6d5;">0x4000000</span><span>,     </span><span style="font-weight:bold;color:#87d6d5;">0x2000000 </span><span>},
-</span><span>    [VIRT_PLIC] </span><span style="color:#ececec;">=         </span><span>{  </span><span style="font-weight:bold;color:#87d6d5;">0xc000000</span><span>, VIRT_PLIC_SIZE(VIRT_CPUS_MAX </span><span style="color:#ececec;">* </span><span style="font-weight:bold;color:#87d6d5;">2</span><span>) },
-</span><span>    [VIRT_APLIC_M] </span><span style="color:#ececec;">=      </span><span>{  </span><span style="font-weight:bold;color:#87d6d5;">0xc000000</span><span>, APLIC_SIZE(VIRT_CPUS_MAX) },
-</span><span>    [VIRT_APLIC_S] </span><span style="color:#ececec;">=      </span><span>{  </span><span style="font-weight:bold;color:#87d6d5;">0xd000000</span><span>, APLIC_SIZE(VIRT_CPUS_MAX) },
-</span><span>    [VIRT_UART0] </span><span style="color:#ececec;">=        </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x10000000</span><span>,         </span><span style="font-weight:bold;color:#87d6d5;">0x100 </span><span>},
-</span><span>    [VIRT_VIRTIO] </span><span style="color:#ececec;">=       </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x10001000</span><span>,        </span><span style="font-weight:bold;color:#87d6d5;">0x1000 </span><span>},
-</span><span>    [VIRT_FW_CFG] </span><span style="color:#ececec;">=       </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x10100000</span><span>,          </span><span style="font-weight:bold;color:#87d6d5;">0x18 </span><span>},
-</span><span>    [VIRT_FLASH] </span><span style="color:#ececec;">=        </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x20000000</span><span>,     </span><span style="font-weight:bold;color:#87d6d5;">0x4000000 </span><span>},
-</span><span>    [VIRT_IMSIC_M] </span><span style="color:#ececec;">=      </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x24000000</span><span>, VIRT_IMSIC_MAX_SIZE },
-</span><span>    [VIRT_IMSIC_S] </span><span style="color:#ececec;">=      </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x28000000</span><span>, VIRT_IMSIC_MAX_SIZE },
-</span><span>    [VIRT_PCIE_ECAM] </span><span style="color:#ececec;">=    </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x30000000</span><span>,    </span><span style="font-weight:bold;color:#87d6d5;">0x10000000 </span><span>},
-</span><span>    [VIRT_PCIE_MMIO] </span><span style="color:#ececec;">=    </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x40000000</span><span>,    </span><span style="font-weight:bold;color:#87d6d5;">0x40000000 </span><span>},
-</span><span>    [VIRT_DRAM] </span><span style="color:#ececec;">=         </span><span>{ </span><span style="font-weight:bold;color:#87d6d5;">0x80000000</span><span>,           </span><span style="font-weight:bold;color:#87d6d5;">0x0 </span><span>},
+<pre data-lang="c" style="background-color:#2e3440;color:#d8dee9;" class="language-c "><code class="language-c" data-lang="c"><span>
+</span><span style="color:#81a1c1;">static const</span><span> MemMapEntry virt_memmap[] </span><span style="color:#81a1c1;">= </span><span>{
+</span><span>    [VIRT_DEBUG] </span><span style="color:#81a1c1;">=        </span><span>{        </span><span style="color:#b48ead;">0x0</span><span style="color:#eceff4;">,         </span><span style="color:#b48ead;">0x100 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_MROM] </span><span style="color:#81a1c1;">=         </span><span>{     </span><span style="color:#b48ead;">0x1000</span><span style="color:#eceff4;">,        </span><span style="color:#b48ead;">0xf000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_TEST] </span><span style="color:#81a1c1;">=         </span><span>{   </span><span style="color:#b48ead;">0x100000</span><span style="color:#eceff4;">,        </span><span style="color:#b48ead;">0x1000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_RTC] </span><span style="color:#81a1c1;">=          </span><span>{   </span><span style="color:#b48ead;">0x101000</span><span style="color:#eceff4;">,        </span><span style="color:#b48ead;">0x1000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_CLINT] </span><span style="color:#81a1c1;">=        </span><span>{  </span><span style="color:#b48ead;">0x2000000</span><span style="color:#eceff4;">,       </span><span style="color:#b48ead;">0x10000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_ACLINT_SSWI] </span><span style="color:#81a1c1;">=  </span><span>{  </span><span style="color:#b48ead;">0x2F00000</span><span style="color:#eceff4;">,        </span><span style="color:#b48ead;">0x4000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_PCIE_PIO] </span><span style="color:#81a1c1;">=     </span><span>{  </span><span style="color:#b48ead;">0x3000000</span><span style="color:#eceff4;">,       </span><span style="color:#b48ead;">0x10000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_PLATFORM_BUS] </span><span style="color:#81a1c1;">= </span><span>{  </span><span style="color:#b48ead;">0x4000000</span><span style="color:#eceff4;">,     </span><span style="color:#b48ead;">0x2000000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_PLIC] </span><span style="color:#81a1c1;">=         </span><span>{  </span><span style="color:#b48ead;">0xc000000</span><span style="color:#eceff4;">, </span><span style="color:#88c0d0;">VIRT_PLIC_SIZE</span><span>(VIRT_CPUS_MAX </span><span style="color:#81a1c1;">* </span><span style="color:#b48ead;">2</span><span>) }</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_APLIC_M] </span><span style="color:#81a1c1;">=      </span><span>{  </span><span style="color:#b48ead;">0xc000000</span><span style="color:#eceff4;">, </span><span style="color:#88c0d0;">APLIC_SIZE</span><span>(VIRT_CPUS_MAX) }</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_APLIC_S] </span><span style="color:#81a1c1;">=      </span><span>{  </span><span style="color:#b48ead;">0xd000000</span><span style="color:#eceff4;">, </span><span style="color:#88c0d0;">APLIC_SIZE</span><span>(VIRT_CPUS_MAX) }</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_UART0] </span><span style="color:#81a1c1;">=        </span><span>{ </span><span style="color:#b48ead;">0x10000000</span><span style="color:#eceff4;">,         </span><span style="color:#b48ead;">0x100 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_VIRTIO] </span><span style="color:#81a1c1;">=       </span><span>{ </span><span style="color:#b48ead;">0x10001000</span><span style="color:#eceff4;">,        </span><span style="color:#b48ead;">0x1000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_FW_CFG] </span><span style="color:#81a1c1;">=       </span><span>{ </span><span style="color:#b48ead;">0x10100000</span><span style="color:#eceff4;">,          </span><span style="color:#b48ead;">0x18 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_FLASH] </span><span style="color:#81a1c1;">=        </span><span>{ </span><span style="color:#b48ead;">0x20000000</span><span style="color:#eceff4;">,     </span><span style="color:#b48ead;">0x4000000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_IMSIC_M] </span><span style="color:#81a1c1;">=      </span><span>{ </span><span style="color:#b48ead;">0x24000000</span><span style="color:#eceff4;">,</span><span> VIRT_IMSIC_MAX_SIZE }</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_IMSIC_S] </span><span style="color:#81a1c1;">=      </span><span>{ </span><span style="color:#b48ead;">0x28000000</span><span style="color:#eceff4;">,</span><span> VIRT_IMSIC_MAX_SIZE }</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_PCIE_ECAM] </span><span style="color:#81a1c1;">=    </span><span>{ </span><span style="color:#b48ead;">0x30000000</span><span style="color:#eceff4;">,    </span><span style="color:#b48ead;">0x10000000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_PCIE_MMIO] </span><span style="color:#81a1c1;">=    </span><span>{ </span><span style="color:#b48ead;">0x40000000</span><span style="color:#eceff4;">,    </span><span style="color:#b48ead;">0x40000000 </span><span>}</span><span style="color:#eceff4;">,
+</span><span>    [VIRT_DRAM] </span><span style="color:#81a1c1;">=         </span><span>{ </span><span style="color:#b48ead;">0x80000000</span><span style="color:#eceff4;">,           </span><span style="color:#b48ead;">0x0 </span><span>}</span><span style="color:#eceff4;">,
 </span><span>}
 </span></code></pre>
 <p>In the beginning I defined a bunch of macros for the addresses of the necessary UART registers to access them more easily. I need the registers <em>LCR, FCR, THR</em> and <em>LSR</em>.</p>
 <p>I also saved the following values in macros:</p>
-<pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#fed6af;">#define </span><span style="color:#e8bc92;">UART_LCR_8BIT </span><span style="font-weight:bold;color:#87d6d5;">3
-</span><span style="color:#fed6af;">#define </span><span style="color:#e8bc92;">UART_FCR_FIFO_ENABLE </span><span style="font-weight:bold;color:#87d6d5;">2
-</span><span style="color:#fed6af;">#define </span><span style="color:#e8bc92;">UART_FCR_14B </span><span style="font-weight:bold;color:#87d6d5;">0xC0
-</span><span style="color:#fed6af;">#define </span><span style="color:#e8bc92;">UART_LSR_THR_EMPTY </span><span style="font-weight:bold;color:#87d6d5;">32
+<pre data-lang="c" style="background-color:#2e3440;color:#d8dee9;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#81a1c1;">#define UART_LCR_8BIT </span><span style="color:#b48ead;">3
+</span><span style="color:#81a1c1;">#define UART_FCR_FIFO_ENABLE </span><span style="color:#b48ead;">2
+</span><span style="color:#81a1c1;">#define UART_FCR_14B </span><span style="color:#b48ead;">0xC0
+</span><span style="color:#81a1c1;">#define UART_LSR_THR_EMPTY </span><span style="color:#b48ead;">32
 </span></code></pre>
 <p>After that I initialize the UART.<br />
 <br />
@@ -69,20 +76,20 @@ Let's start with the <em>LCR</em>. This register is used solely for initializati
 Now for the FCR: this controls the FIFO settings. I combined the two FCR macros from above for this one.</p>
 <p>Outputting a single character is pretty straight-forward: I write the character into the <em>THR</em>.</p>
 <p>Okay so now I can basically output anything. For printing a word, I just iterate thorugh all characters of the word and output the characters separately. This is the code snippet:</p>
-<pre data-lang="c" style="background-color:#393939;color:#dedede;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#fffb9d;">void </span><span style="color:#fffd87;">output_UART</span><span>(</span><span style="color:#fffb9d;">char </span><span>c) {
-</span><span>  init_UART();
-</span><span>  THR </span><span style="color:#ececec;">=</span><span> c;
+<pre data-lang="c" style="background-color:#2e3440;color:#d8dee9;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#81a1c1;">void </span><span style="color:#88c0d0;">output_UART</span><span>(</span><span style="color:#81a1c1;">char </span><span>c) {
+</span><span>  </span><span style="color:#88c0d0;">init_UART</span><span>()</span><span style="color:#eceff4;">;
+</span><span>  THR </span><span style="color:#81a1c1;">=</span><span> c</span><span style="color:#eceff4;">;
 </span><span>}
 </span><span>
-</span><span style="color:#fffb9d;">void </span><span style="color:#fffd87;">prints</span><span>(</span><span style="color:#fffb9d;">char</span><span style="color:#ececec;">* </span><span>word) {
-</span><span>  </span><span style="color:#fffb9d;">int</span><span> char_count;
-</span><span>  </span><span style="color:#fed6af;">while </span><span>(</span><span style="color:#ececec;">*</span><span>word </span><span style="color:#ececec;">!= </span><span style="color:#d6d6d680;">&#39;</span><span style="font-weight:bold;color:#ff8080;">\0</span><span style="color:#d6d6d680;">&#39;</span><span>) {
-</span><span>    char_count </span><span style="color:#ececec;">= </span><span style="font-weight:bold;color:#87d6d5;">0</span><span>;
-</span><span>    </span><span style="color:#fed6af;">if </span><span>(LSR </span><span style="color:#ececec;">!=</span><span> UART_LSR_THR_EMPTY) {
-</span><span>        </span><span style="color:#fed6af;">while </span><span>(char_count </span><span style="color:#ececec;">&lt; </span><span style="font-weight:bold;color:#87d6d5;">14</span><span>) {
-</span><span>          output_UART((uint8) </span><span style="color:#ececec;">*</span><span>word);
-</span><span>          word</span><span style="color:#ececec;">++</span><span>;
-</span><span>          </span><span style="color:#fed6af;">if </span><span>(</span><span style="color:#ececec;">*</span><span>word </span><span style="color:#ececec;">== </span><span style="color:#d6d6d680;">&#39;</span><span style="font-weight:bold;color:#ff8080;">\0</span><span style="color:#d6d6d680;">&#39;</span><span>) </span><span style="color:#fed6af;">return</span><span>;
+</span><span style="color:#81a1c1;">void </span><span style="color:#88c0d0;">prints</span><span>(</span><span style="color:#81a1c1;">char* </span><span>word) {
+</span><span>  </span><span style="color:#81a1c1;">int</span><span> char_count</span><span style="color:#eceff4;">;
+</span><span>  </span><span style="color:#81a1c1;">while </span><span>(</span><span style="color:#81a1c1;">*</span><span>word </span><span style="color:#81a1c1;">!= </span><span style="color:#a3be8c;">&#39;</span><span style="color:#ebcb8b;">\0</span><span style="color:#a3be8c;">&#39;</span><span>) {
+</span><span>    char_count </span><span style="color:#81a1c1;">= </span><span style="color:#b48ead;">0</span><span style="color:#eceff4;">;
+</span><span>    </span><span style="color:#81a1c1;">if </span><span>(LSR </span><span style="color:#81a1c1;">!=</span><span> UART_LSR_THR_EMPTY) {
+</span><span>        </span><span style="color:#81a1c1;">while </span><span>(char_count </span><span style="color:#81a1c1;">&lt; </span><span style="color:#b48ead;">14</span><span>) {
+</span><span>          </span><span style="color:#88c0d0;">output_UART</span><span>((uint8) </span><span style="color:#81a1c1;">*</span><span>word)</span><span style="color:#eceff4;">;
+</span><span>          word</span><span style="color:#81a1c1;">++</span><span style="color:#eceff4;">;
+</span><span>          </span><span style="color:#81a1c1;">if </span><span>(</span><span style="color:#81a1c1;">*</span><span>word </span><span style="color:#81a1c1;">== </span><span style="color:#a3be8c;">&#39;</span><span style="color:#ebcb8b;">\0</span><span style="color:#a3be8c;">&#39;</span><span>) </span><span style="color:#81a1c1;">return</span><span style="color:#eceff4;">;
 </span><span>            }
 </span><span>        }
 </span><span>    }
@@ -93,6 +100,24 @@ Now for the FCR: this controls the FIFO settings. I combined the two FCR macros 
 
         </div>
     </section>
+    <script>
+        function switch_mode() {
+            var element = document.querySelector("body"); 
+            element.style.transition = "all 0.4s ease";
+            if (document.body.classList.toggle('dark_mode')) {
+                localStorage.setItem('mode', 'dark');
+            } else {
+                localStorage.setItem('mode', 'light');
+            }
+        }
+        if (localStorage.getItem("mode") === "dark") {
+            document.body.classList.toggle('dark_mode');
+        } else if (localStorage.getItem("mode") === null) {
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.toggle('dark_mode');
+            }
+        }
+    </script>
 </body>
 
 </html>

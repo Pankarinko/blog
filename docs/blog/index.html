@@ -8,6 +8,13 @@
 </head>
 
 <body>
+    <div class="sidebar">
+        <div> 
+            <a href="https://pankarinko.github.io/os-blog/." style="text-decoration:none"<span class="button">Profile</span></a>
+            <a href="https://pankarinko.github.io/os-blog/blog" style="text-decoration:none"<span class="button">Contents</span></a>
+        </div>
+        <span class="button" onclick="switch_mode()">Switch Mode</span>
+    </div>
     <section class="section">
         <div class="container">
             
@@ -17,6 +24,10 @@
 <ul>
     <!-- If you are using pagination, section.pages will be empty.
        You need to use the paginator object -->
+    
+    <li><a href="https://pankarinko.github.io/os-blog/blog/getting-started/">Getting Started</a></li>
+    
+    <li><a href="https://pankarinko.github.io/os-blog/blog/encourage-women/">Why computer science courses fail women</a></li>
     
     <li><a href="https://pankarinko.github.io/os-blog/blog/timer/">Timer</a></li>
     
@@ -28,6 +39,24 @@
 
         </div>
     </section>
+    <script>
+        function switch_mode() {
+            var element = document.querySelector("body"); 
+            element.style.transition = "all 0.4s ease";
+            if (document.body.classList.toggle('dark_mode')) {
+                localStorage.setItem('mode', 'dark');
+            } else {
+                localStorage.setItem('mode', 'light');
+            }
+        }
+        if (localStorage.getItem("mode") === "dark") {
+            document.body.classList.toggle('dark_mode');
+        } else if (localStorage.getItem("mode") === null) {
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.toggle('dark_mode');
+            }
+        }
+    </script>
 </body>
 
 </html>
