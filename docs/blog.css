@@ -39,7 +39,7 @@ body {
 
     
 .sidebar {
-  position: absolute;
+  position: fixed;
   justify-content: space-between;
   top: 0;
   left: 0;
