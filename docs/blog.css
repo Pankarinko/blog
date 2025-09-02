@@ -49,6 +49,7 @@ body {
   overflow-x: hidden;
   flex-direction: column;
   background: var(--sidebar_color);
+  box-shadow: 3px 0px 10px #01000265;
 }
 
 .sidebar .button {
@@ -57,6 +58,7 @@ body {
     margin: 25px 20px;
     font-family: 'Encode_Sans_SC';
     display: block;
+    user-select: none;
 }
 
 .sidebar .button:hover {
