@@ -24,10 +24,12 @@
     </section>
     <script>
         function switch_mode() {
-            var body = document.querySelector("body"); 
+            var body = document.querySelector("body");
             body.style.transition = "all 0.4s ease";
             var sidebar = document.querySelector(".sidebar"); 
             sidebar.style.transition = "all 0.4s ease";
+            var profile = document.querySelector(".profile"); 
+            profile.style.transition = "all 0.4s ease";
             if (document.body.classList.toggle('dark_mode')) {
                 localStorage.setItem('mode', 'dark');
             } else {
