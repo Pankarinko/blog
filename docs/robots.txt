@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 Allow: /
-Sitemap: https://pankarinko.github.io/os-blog/sitemap.xml
+Sitemap: https://pankarinko.github.io/blog/sitemap.xml
