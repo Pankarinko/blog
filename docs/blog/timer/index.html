@@ -33,8 +33,10 @@ There is also a memory-mapped <em>mtimecmp</em> register, which can hold a value
     </section>
     <script>
         function switch_mode() {
-            var element = document.querySelector("body"); 
-            element.style.transition = "all 0.4s ease";
+            var body = document.querySelector("body"); 
+            body.style.transition = "all 0.4s ease";
+            var sidebar = document.querySelector(".sidebar"); 
+            sidebar.style.transition = "all 0.4s ease";
             if (document.body.classList.toggle('dark_mode')) {
                 localStorage.setItem('mode', 'dark');
             } else {

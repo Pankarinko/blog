@@ -25,6 +25,15 @@ body {
     --sidebar_color: #231f32;
 }
 
+.profile-container {
+    display: flex;
+    justify-content: center;
+}
+
+.profile {
+    box-shadow: 20px 6px 30px #01000265;
+}
+
 body {
     
     color: var(--font_color);
@@ -49,7 +58,7 @@ body {
   overflow-x: hidden;
   flex-direction: column;
   background: var(--sidebar_color);
-  box-shadow: 3px 0px 10px #01000265;
+  box-shadow: 3px 20px 10px  #01000265;
 }
 
 .sidebar .button {

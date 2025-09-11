@@ -19,8 +19,14 @@
         <div class="container">
             
 <h1 class="title">
-    Project-Blog
+    Profile
 </h1>
+
+
+<div class="profile-container">
+<img class="profile"
+src="/img/profile_shoulder.png"/>
+</div>
 
 <p> I set out to write a simple operating system for RISCV just for fun. This blog describes all the steps (and missteps) I took
 
@@ -32,8 +38,10 @@ Since I only came up with the idea of this blog after I already did some things 
     </section>
     <script>
         function switch_mode() {
-            var element = document.querySelector("body"); 
-            element.style.transition = "all 0.4s ease";
+            var body = document.querySelector("body"); 
+            body.style.transition = "all 0.4s ease";
+            var sidebar = document.querySelector(".sidebar"); 
+            sidebar.style.transition = "all 0.4s ease";
             if (document.body.classList.toggle('dark_mode')) {
                 localStorage.setItem('mode', 'dark');
             } else {
