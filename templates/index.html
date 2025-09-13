@@ -2,19 +2,9 @@
 
 {% block content %}
 <h1 class="title">
-    Profile
+    Project-Blog
 </h1>
 
-
-<div class="profile-container">
-<img class="profile"
-src="/img/profile_circle.png"/>
-</div>
-
-<p> I set out to write a simple operating system for RISCV just for fun. This blog describes all the steps (and missteps) I took
-
-Since I only came up with the idea of this blog after I already did some things - mainly to motivate myself - I will try to remember and summarize what I did.
-</p>
 <ul>
     <!-- If you are using pagination, section.pages will be empty.
        You need to use the paginator object -->
@@ -22,5 +12,4 @@ Since I only came up with the idea of this blog after I already did some things 
     <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
     {% endfor %}
 </ul>
-
 {% endblock content %}
