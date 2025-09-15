@@ -1,4 +1,4 @@
-
+# Getting started
 
 I wanted to continue my old RISCV OS - but I didn't have many features implemented anyway and some parts were not working properly because I had no idea what I was doing at the time. I wanted to refactor the little code I had anyway but I am also sick of C. Since I already struggled to keep to my original plan, I thought, why not make it even harder and rewrite it in Rust. Especially since this might be a good opportunity to get familar with unsafe Rust which I haven't used yet. So here it goes...
 
