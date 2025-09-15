@@ -1,19 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
+{% block content %}
 <head>
     <meta charset="utf-8">
-    <title>Blog</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="blog.css" />
 </head>
 
 <body>
+    <div class="profile-container">
+<img class="profile"
+src="./img/profile_circle.png"/>
+</div>
+
+<p> I set out to write a simple operating system for RISCV just for fun. This blog describes all the steps (and missteps) I took
+
+Since I only came up with the idea of this blog after I already did some things - mainly to motivate myself - I will try to remember and summarize what I did.
+</p>
     <div class="sidebar">
-        <div> 
-            <a href="profile.html" style="text-decoration:none"<span class="button">Profile</span></a>
-            <a href="profile.html" style="text-decoration:none"<span class="button">Contents</span></a>
-        </div>
-        <span class="button" onclick="switch_mode()">Switch Mode</span>
+    <div> 
+        <a href="content.html" style="text-decoration:none"<span class="button">Profile</span></a>
+        <a href="profile.html" style="text-decoration:none"<span class="button">Contents</span></a>
+    </div>
+    <span class="button" onclick="switch_mode()">Switch Mode</span>
     </div>
     <section class="section">
         <div class="container">
@@ -42,4 +51,5 @@
     </script>
 </body>
 
-</html>
+
+{% endblock content %}

@@ -1,22 +1,16 @@
 
-path = ""
+path = "base.html"
+title = "getting-started"
+content_path =  title + ".md"
 
-
-with open(path, r) as content_file:
-    
-
-
-path = "src/base.html"
-
-with open(path, "r+") as base:
-    pos = 0
-    while(True):
-        line = base.readLine()
-        if line.startswith('<body>'):
-            break    
-        if (line == ""):
-            return
-    base.seek(i + 1)
-    rem = base.read()
-
+def insert(path, content_path):
+    with open(path, "r") as b:
+        base = b.read()
+        with open(content_path, "r") as content:  
+            base = base.replace("yuhuu", content.read())
+        page = open("./" + title + ".html", "w")
+        page.write(base)
+        page.close()
+        print(base)
+insert(path, content_path)
 
