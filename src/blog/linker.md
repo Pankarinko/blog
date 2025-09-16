@@ -1,13 +1,8 @@
-+++
-title = "Linker Script"
-date = 2024-06-07
-+++
- 
 
 
 This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in the *script.ld* file:
 
-```ld
+```c
 ENTRY(asm_entry)
 OUTPUT_ARCH(riscv)
 
