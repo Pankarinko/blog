@@ -1,0 +1,8 @@
+
+<div class="profile-container"><img class="profile" src="static/img/profile_circle.png"/></div>
+
+<p> I set out to write a simple operating system for RISCV just for fun. This blog describes all the steps (and missteps) I took
+
+Since I only came up with the idea of this blog after I already did some things - mainly to motivate myself - I will try to remember and summarize what I did.
+</p>
+   
