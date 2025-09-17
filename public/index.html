@@ -3,21 +3,62 @@
 
 <head>
     <meta charset="utf-8">
-    <title>OS Blog</title>
-    <link rel="stylesheet" href="/blog.css" />
+    <title>Blog</title>
+    <link rel="stylesheet" href="static/blog.css" />
+    <style></style>
 </head>
 
-<body class="light_mode">
-    <section class="section">
-        <div class="container">
-
-            <h1 class="title">
-                A
-            </h1>
-            <p><a href="https://pankarinko.github.io/blog/">Posts</a>.</p>
-
+    <div class="sidebar">
+        <div> 
+            <a href="profile.html" style="text-decoration:none"><span class="button">Profile</span></a>
+            <a href="index.html" style="text-decoration:none"><span class="button">Contents</span></a>
         </div>
-    </section>
-</body>
+        <span class="button" onclick="switch_mode()">Switch Mode</span>
+    </div>
+    <div class="container">
+        <h1 id="contents">Contents</h1>
+        <p class="contents">
+        <a href="getting-started.html" style="text-decoration:none"><span
+        class="chapter">Getting started</span></a>
+        <a href="linker.html" style="text-decoration:none"><span
+        class="chapter">Linker</span></a>
+        <a href="uart.html" style="text-decoration:none" ><span
+        class="chapter">UART</span></a>
+        <a href="timer.html" style="text-decoration:none" ><span
+        class="chapter">Timer</span></a>
+        <a href="encourage_women.html" style="text-decoration:none" ><span
+        class="chapter">Woman Perspective</span></a>
+        </p>
+    </div>
+    <script>
+        function switch_mode() {
+            var body = document.querySelector("body"); 
+            body.style.transition = "all 0.4s ease";
+            var sidebar = document.querySelector(".sidebar"); 
+            sidebar.style.transition = "all 0.4s ease";
+            var profile = document.querySelector(".profile"); 
+            if (profile !== null) {
+                profile.style.transition = "all 0.4s ease";
+            }
+            var chapter = document.querySelectorAll(".chapter"); 
+            if (chapter.length !== null) {
+                for (var i = 0; i < chapter.length; i++) {
+                    chapter[i].style.transition = "all 0.4s ease";
+                }
+            }
+            if (document.body.classList.toggle('dark_mode')) {
+                localStorage.setItem('mode', 'dark');
+            } else {
+                localStorage.setItem('mode', 'light');
+            }
+        }
+        if (localStorage.getItem("mode") === "dark") {
+            document.body.classList.toggle('dark_mode');
+        } else if (localStorage.getItem("mode") === null) {
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.toggle('dark_mode');
+            }
+        }
+    </script>
 
 </html>

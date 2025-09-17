@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Blog</title>
+    <link rel="stylesheet" href="static/blog.css" />
+    <style>html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */</style>
+</head>
+
+    <div class="sidebar">
+        <div> 
+            <a href="profile.html" style="text-decoration:none"><span class="button">Profile</span></a>
+            <a href="index.html" style="text-decoration:none"><span class="button">Contents</span></a>
+        </div>
+        <span class="button" onclick="switch_mode()">Switch Mode</span>
+    </div>
+    <div class="container">
+        <p>First off, it really wasnt’t that easy to find material on
+        UART. I made everything using <a
+        href="https://www.lammertbies.nl/comm/info/serial-uart">this
+        blog</a> and <a href="http://byterunner.com/16550.html">this
+        data sheet</a>. Here I will summerize, which parts of these I
+        needed.</p>
+        <h3 id="why-do-i-use-uart">Why do I use UART?</h3>
+        <p>For programming an operating system, I need to be able to
+        communicate with it. For that, I need some form of output.
+        Without output it is really hard to debug anything, so I dealt
+        with this problem first. UART is a protocol for communication
+        between devices. Since I use QEMU as my RISCV emulator and QEMU
+        already supports UART, I just use UART as well. Besides, UART is
+        less complicated to implement than other communication
+        protocols.</p>
+        <h3 id="what-i-did">What I did</h3>
+        <p>UART operates with the 8 registers, found in this table (<a
+        href="https://www.lammertbies.nl/comm/info/serial-uart">source</a>):</p>
+        <table>
+        <thead>
+        <tr class="header">
+        <th style="text-align: left;">Address</th>
+        <th style="text-align: left;">Read</th>
+        <th style="text-align: left;">Write</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="odd">
+        <td style="text-align: left;">base</td>
+        <td style="text-align: left;">RBR receiver buffer</td>
+        <td style="text-align: left;">THR transmitter holding</td>
+        </tr>
+        <tr class="even">
+        <td style="text-align: left;">base+1</td>
+        <td style="text-align: left;">IER interrupt enable</td>
+        <td style="text-align: left;">IER interrupt enable</td>
+        </tr>
+        <tr class="odd">
+        <td style="text-align: left;">base+2</td>
+        <td style="text-align: left;">IIR interrupt identification</td>
+        <td style="text-align: left;">FCR FIFO control</td>
+        </tr>
+        <tr class="even">
+        <td style="text-align: left;">base+3</td>
+        <td style="text-align: left;">LCR line control</td>
+        <td style="text-align: left;">LCR line control</td>
+        </tr>
+        <tr class="odd">
+        <td style="text-align: left;">base+4</td>
+        <td style="text-align: left;">MCR modem control</td>
+        <td style="text-align: left;">MCR modem control</td>
+        </tr>
+        <tr class="even">
+        <td style="text-align: left;">base+5</td>
+        <td style="text-align: left;">LSR line status</td>
+        <td style="text-align: left;">-</td>
+        </tr>
+        <tr class="odd">
+        <td style="text-align: left;">base+6</td>
+        <td style="text-align: left;">MSR modem status</td>
+        <td style="text-align: left;">-</td>
+        </tr>
+        <tr class="even">
+        <td style="text-align: left;">base+7</td>
+        <td style="text-align: left;">SCR scratch</td>
+        <td style="text-align: left;">SCR scratch</td>
+        </tr>
+        </tbody>
+        </table>
+        <p>To access the registers, I need to know the base address of
+        the UART-area in my emulator. Forthe virt machine in QEMU it is
+        address 0x10000000 as seen in the <a
+        href="https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c">official
+        virt memory layout</a>. The memory layout is actuallay very
+        important for me in general so I will paste it here:</p>
+        <div class="sourceCode" id="cb1"><pre
+        class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">const</span> MemMapEntry virt_memmap<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_DEBUG<span class="op">]</span> <span class="op">=</span>        <span class="op">{</span>        <span class="bn">0x0</span><span class="op">,</span>         <span class="bn">0x100</span> <span class="op">},</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_MROM<span class="op">]</span> <span class="op">=</span>         <span class="op">{</span>     <span class="bn">0x1000</span><span class="op">,</span>        <span class="bn">0xf000</span> <span class="op">},</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_TEST<span class="op">]</span> <span class="op">=</span>         <span class="op">{</span>   <span class="bn">0x100000</span><span class="op">,</span>        <span class="bn">0x1000</span> <span class="op">},</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_RTC<span class="op">]</span> <span class="op">=</span>          <span class="op">{</span>   <span class="bn">0x101000</span><span class="op">,</span>        <span class="bn">0x1000</span> <span class="op">},</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_CLINT<span class="op">]</span> <span class="op">=</span>        <span class="op">{</span>  <span class="bn">0x2000000</span><span class="op">,</span>       <span class="bn">0x10000</span> <span class="op">},</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_ACLINT_SSWI<span class="op">]</span> <span class="op">=</span>  <span class="op">{</span>  <span class="bn">0x2F00000</span><span class="op">,</span>        <span class="bn">0x4000</span> <span class="op">},</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_PCIE_PIO<span class="op">]</span> <span class="op">=</span>     <span class="op">{</span>  <span class="bn">0x3000000</span><span class="op">,</span>       <span class="bn">0x10000</span> <span class="op">},</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_PLATFORM_BUS<span class="op">]</span> <span class="op">=</span> <span class="op">{</span>  <span class="bn">0x4000000</span><span class="op">,</span>     <span class="bn">0x2000000</span> <span class="op">},</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_PLIC<span class="op">]</span> <span class="op">=</span>         <span class="op">{</span>  <span class="bn">0xc000000</span><span class="op">,</span> VIRT_PLIC_SIZE<span class="op">(</span>VIRT_CPUS_MAX <span class="op">*</span> <span class="dv">2</span><span class="op">)</span> <span class="op">},</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_APLIC_M<span class="op">]</span> <span class="op">=</span>      <span class="op">{</span>  <span class="bn">0xc000000</span><span class="op">,</span> APLIC_SIZE<span class="op">(</span>VIRT_CPUS_MAX<span class="op">)</span> <span class="op">},</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_APLIC_S<span class="op">]</span> <span class="op">=</span>      <span class="op">{</span>  <span class="bn">0xd000000</span><span class="op">,</span> APLIC_SIZE<span class="op">(</span>VIRT_CPUS_MAX<span class="op">)</span> <span class="op">},</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_UART0<span class="op">]</span> <span class="op">=</span>        <span class="op">{</span> <span class="bn">0x10000000</span><span class="op">,</span>         <span class="bn">0x100</span> <span class="op">},</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_VIRTIO<span class="op">]</span> <span class="op">=</span>       <span class="op">{</span> <span class="bn">0x10001000</span><span class="op">,</span>        <span class="bn">0x1000</span> <span class="op">},</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_FW_CFG<span class="op">]</span> <span class="op">=</span>       <span class="op">{</span> <span class="bn">0x10100000</span><span class="op">,</span>          <span class="bn">0x18</span> <span class="op">},</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_FLASH<span class="op">]</span> <span class="op">=</span>        <span class="op">{</span> <span class="bn">0x20000000</span><span class="op">,</span>     <span class="bn">0x4000000</span> <span class="op">},</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_IMSIC_M<span class="op">]</span> <span class="op">=</span>      <span class="op">{</span> <span class="bn">0x24000000</span><span class="op">,</span> VIRT_IMSIC_MAX_SIZE <span class="op">},</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_IMSIC_S<span class="op">]</span> <span class="op">=</span>      <span class="op">{</span> <span class="bn">0x28000000</span><span class="op">,</span> VIRT_IMSIC_MAX_SIZE <span class="op">},</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_PCIE_ECAM<span class="op">]</span> <span class="op">=</span>    <span class="op">{</span> <span class="bn">0x30000000</span><span class="op">,</span>    <span class="bn">0x10000000</span> <span class="op">},</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_PCIE_MMIO<span class="op">]</span> <span class="op">=</span>    <span class="op">{</span> <span class="bn">0x40000000</span><span class="op">,</span>    <span class="bn">0x40000000</span> <span class="op">},</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>VIRT_DRAM<span class="op">]</span> <span class="op">=</span>         <span class="op">{</span> <span class="bn">0x80000000</span><span class="op">,</span>           <span class="bn">0x0</span> <span class="op">},</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+        <p>In the beginning I defined a bunch of macros for the
+        addresses of the necessary UART registers to access them more
+        easily. I need the registers <em>LCR, FCR, THR</em> and
+        <em>LSR</em>.</p>
+        <p>I also saved the following values in macros:</p>
+        <div class="sourceCode" id="cb2"><pre
+        class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define UART_LCR_8BIT </span><span class="dv">3</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define UART_FCR_FIFO_ENABLE </span><span class="dv">2</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#define UART_FCR_14B </span><span class="bn">0xC0</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#define UART_LSR_THR_EMPTY </span><span class="dv">32</span></span></code></pre></div>
+        <p>After that I initialize the UART.<br />
+        <br />
+        For the initialization I need the <em>LCR</em> and <em>FCR</em>
+        registers.<br />
+        Let’s start with the <em>LCR</em>. This register is used solely
+        for initialization. It can be set to transferring, 5,6,7 or 8
+        Bits at once. I thought setting it to the highest possible data
+        rate -which is conviniently also the size of a byte- would be
+        the best (or at least I think that was my thought process, I’m
+        not sure, it was a while ago.) I also follow the recommendation
+        from the website to use one stop bit and no parity bit. That
+        means the value of LCR is set to 0x03.<br />
+        Now for the FCR: this controls the FIFO settings. I combined the
+        two FCR macros from above for this one.</p>
+        <p>Outputting a single character is pretty straight-forward: I
+        write the character into the <em>THR</em>.</p>
+        <p>Okay so now I can basically output anything. For printing a
+        word, I just iterate thorugh all characters of the word and
+        output the characters separately. This is the code snippet:</p>
+        <div class="sourceCode" id="cb3"><pre
+        class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> output_UART<span class="op">(</span><span class="dt">char</span> c<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  init_UART<span class="op">();</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  THR <span class="op">=</span> c<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> prints<span class="op">(</span><span class="dt">char</span><span class="op">*</span> word<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> char_count<span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="op">(*</span>word <span class="op">!=</span> <span class="ch">&#39;</span><span class="sc">\0</span><span class="ch">&#39;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    char_count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>LSR <span class="op">!=</span> UART_LSR_THR_EMPTY<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="op">(</span>char_count <span class="op">&lt;</span> <span class="dv">14</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          output_UART<span class="op">((</span>uint8<span class="op">)</span> <span class="op">*</span>word<span class="op">);</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>          word<span class="op">++;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span> <span class="op">(*</span>word <span class="op">==</span> <span class="ch">&#39;</span><span class="sc">\0</span><span class="ch">&#39;</span><span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+        <p>That’s it so far. As you might have noticed, I don’t handle
+        user input yet. I will deal with it when I need it.</p>
+    </div>
+    <script>
+        function switch_mode() {
+            var body = document.querySelector("body"); 
+            body.style.transition = "all 0.4s ease";
+            var sidebar = document.querySelector(".sidebar"); 
+            sidebar.style.transition = "all 0.4s ease";
+            var profile = document.querySelector(".profile"); 
+            if (profile !== null) {
+                profile.style.transition = "all 0.4s ease";
+            }
+            var chapter = document.querySelectorAll(".chapter"); 
+            if (chapter.length !== null) {
+                for (var i = 0; i < chapter.length; i++) {
+                    chapter[i].style.transition = "all 0.4s ease";
+                }
+            }
+            if (document.body.classList.toggle('dark_mode')) {
+                localStorage.setItem('mode', 'dark');
+            } else {
+                localStorage.setItem('mode', 'light');
+            }
+        }
+        if (localStorage.getItem("mode") === "dark") {
+            document.body.classList.toggle('dark_mode');
+        } else if (localStorage.getItem("mode") === null) {
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.toggle('dark_mode');
+            }
+        }
+    </script>
+
+</html>

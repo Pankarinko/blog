@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Blog</title>
+    <link rel="stylesheet" href="static/blog.css" />
+    <style>html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */</style>
+</head>
+
+    <div class="sidebar">
+        <div> 
+            <a href="profile.html" style="text-decoration:none"><span class="button">Profile</span></a>
+            <a href="index.html" style="text-decoration:none"><span class="button">Contents</span></a>
+        </div>
+        <span class="button" onclick="switch_mode()">Switch Mode</span>
+    </div>
+    <div class="container">
+        <p>This was the first and unfortunately most fucked up part of
+        the whole thing so far. Here is the code I have so far in the
+        <em>script.ld</em> file:</p>
+        <div class="sourceCode" id="cb1"><pre
+        class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ENTRY<span class="op">(</span>asm_entry<span class="op">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>OUTPUT_ARCH<span class="op">(</span>riscv<span class="op">)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>MEMORY <span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    RAM <span class="op">(</span>rwx<span class="op">)</span> <span class="op">:</span> org <span class="op">=</span> <span class="bn">0x80000000</span><span class="op">,</span> len <span class="op">=</span> <span class="dv">1</span><span class="er">M</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>PHDRS <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  text PT_LOAD<span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>SECTIONS <span class="op">{</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a> <span class="op">.</span>text <span class="op">:</span> <span class="op">{</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span> <span class="op">=</span> ALIGN<span class="op">(</span><span class="dv">8</span><span class="op">);</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    PROVIDE<span class="op">(</span>startkernel <span class="op">=</span> <span class="op">.);</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">*(.</span>text<span class="op">)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">*(.</span>text<span class="op">*)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    PROVIDE<span class="op">(</span>endkernel <span class="op">=</span> <span class="op">.);</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a> <span class="op">}</span> <span class="op">&gt;</span> RAM <span class="op">:</span> text</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+        <h4 id="now-the-explanation">Now the explanation:</h4>
+        <p>The first line tells the linker that the code starts at the
+        label <em>asm_entry (found in entry.S)</em> The second line the
+        architecture to RISCV.</p>
+        <p>In the <strong>MEMORY</strong> section, I define all
+        addressess above 0x80000000 as RAM. This is the address from
+        which the RISCV architecture allows the OS and user space
+        programs to use memory - everything smaller than this address is
+        mapped to some device. My RAM is readable, writable and
+        executable (rwx) however at this point I know I will probably
+        need to define a new memory section that is not writable for the
+        kernel, because kernel code shouldn’t reside in writable
+        memory.</p>
+        <p><strong>PHDRS</strong> defines ELF program headers <em>(see
+        also <a
+        href="https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_node/ld_23.html">here</a></em>.
+        I only have one memory segment so far, <em>.text</em>.
+        <em>PT_LOAD</em> means, that this segment has to be loaded from
+        a file.</p>
+        <p>The <strong>SECTIONS</strong> part describes all the segments
+        our memory will have. Again, at this point I only have some
+        kernel code so I only have the <em>.text</em> segment, where the
+        kernel code is. The address of the beginning of this segment is
+        saved into the variable <em>startkernel</em>, the address of the
+        end is saved into the variable <em>endkernel</em>. These
+        variables will be used in the C-code later. The segment is
+        aligned by 8 Bytes because I write this OS for RISCV64.
+        <em>.text</em> will be placed in the RAM memory section.</p>
+    </div>
+    <script>
+        function switch_mode() {
+            var body = document.querySelector("body"); 
+            body.style.transition = "all 0.4s ease";
+            var sidebar = document.querySelector(".sidebar"); 
+            sidebar.style.transition = "all 0.4s ease";
+            var profile = document.querySelector(".profile"); 
+            if (profile !== null) {
+                profile.style.transition = "all 0.4s ease";
+            }
+            var chapter = document.querySelectorAll(".chapter"); 
+            if (chapter.length !== null) {
+                for (var i = 0; i < chapter.length; i++) {
+                    chapter[i].style.transition = "all 0.4s ease";
+                }
+            }
+            if (document.body.classList.toggle('dark_mode')) {
+                localStorage.setItem('mode', 'dark');
+            } else {
+                localStorage.setItem('mode', 'light');
+            }
+        }
+        if (localStorage.getItem("mode") === "dark") {
+            document.body.classList.toggle('dark_mode');
+        } else if (localStorage.getItem("mode") === null) {
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.toggle('dark_mode');
+            }
+        }
+    </script>
+
+</html>

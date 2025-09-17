@@ -28,6 +28,10 @@
             if (profile !== null) {
                 profile.style.transition = "all 0.4s ease";
             }
+            var chapter = document.querySelector(".chapter"); 
+            if (chapter !== null) {
+                chapter.style.transition = "all 0.4s ease";
+            }
             if (document.body.classList.toggle('dark_mode')) {
                 localStorage.setItem('mode', 'dark');
             } else {

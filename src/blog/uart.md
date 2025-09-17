@@ -1,9 +1,3 @@
-+++
-title = "UART"
-date = 2024-08-19
-+++
-
-
 
 First off, it really wasnt't that easy to find material on UART. I made everything using [this blog](https://www.lammertbies.nl/comm/info/serial-uart) and [this data sheet](http://byterunner.com/16550.html). Here I will summerize, which parts of these I needed.
 
@@ -72,6 +66,7 @@ Now for the FCR: this controls the FIFO settings. I combined the two FCR macros 
 Outputting a single character is pretty straight-forward: I write the character into the *THR*.
 
 Okay so now I can basically output anything. For printing a word, I just iterate thorugh all characters of the word and output the characters separately. This is the code snippet:
+
 ```c
 void output_UART(char c) {
   init_UART();
