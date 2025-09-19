@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <title>Blog</title>
     <link rel="stylesheet" href="static/blog.css" />
-    <style></style>
 </head>
 
+<body>
     <div class="sidebar">
         <div> 
             <a href="profile.html" style="text-decoration:none"><span class="button">Profile</span></a>
@@ -16,19 +16,7 @@
         <span class="button" onclick="switch_mode()">Switch Mode</span>
     </div>
     <div class="container">
-        <h1 id="contents">Contents</h1>
-        <p class="contents">
-        <a href="getting-started.html" style="text-decoration:none"><span
-        class="chapter">Getting started</span></a>
-        <a href="linker.html" style="text-decoration:none"><span
-        class="chapter">Linker</span></a>
-        <a href="uart.html" style="text-decoration:none" ><span
-        class="chapter">UART</span></a>
-        <a href="timer.html" style="text-decoration:none" ><span
-        class="chapter">Timer</span></a>
-        <a href="encourage_women.html" style="text-decoration:none" ><span
-        class="chapter">Woman Perspective</span></a>
-        </p>
+            yuhuu
     </div>
     <script>
         function switch_mode() {
@@ -40,11 +28,9 @@
             if (profile !== null) {
                 profile.style.transition = "all 0.4s ease";
             }
-            var chapter = document.querySelectorAll(".chapter"); 
-            if (chapter.length !== null) {
-                for (var i = 0; i < chapter.length; i++) {
-                    chapter[i].style.transition = "all 0.4s ease";
-                }
+            var chapter = document.querySelector(".chapter"); 
+            if (chapter !== null) {
+                chapter.style.transition = "all 0.4s ease";
             }
             if (document.body.classList.toggle('dark_mode')) {
                 localStorage.setItem('mode', 'dark');
@@ -60,5 +46,6 @@
             }
         }
     </script>
+</body>
 
 </html>

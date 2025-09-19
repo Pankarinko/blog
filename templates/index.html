@@ -5,9 +5,11 @@
     Project-Blog
 </h1>
 
-<p> I set out to write a simple operating system for RISCV just for fun. This blog describes all the steps (and missteps) I took
-
-Since I only came up with the idea of this blog after I already did some things - mainly to motivate myself - I will try to remember and summarize what I did.
-</p>
-<p><a href="{{ get_url(path='@/blog/_index.md') }}">Posts</a>.</p>
+<ul>
+    <!-- If you are using pagination, section.pages will be empty.
+       You need to use the paginator object -->
+    {% for page in section.pages %}
+    <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
+    {% endfor %}
+</ul>
 {% endblock content %}

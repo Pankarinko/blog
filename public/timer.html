@@ -16,19 +16,25 @@
         <span class="button" onclick="switch_mode()">Switch Mode</span>
     </div>
     <div class="container">
-        <h1 id="contents">Contents</h1>
-        <p class="contents">
-        <a href="getting-started.html" style="text-decoration:none"><span
-        class="chapter">Getting started</span></a>
-        <a href="linker.html" style="text-decoration:none"><span
-        class="chapter">Linker</span></a>
-        <a href="uart.html" style="text-decoration:none" ><span
-        class="chapter">UART</span></a>
-        <a href="timer.html" style="text-decoration:none" ><span
-        class="chapter">Timer</span></a>
-        <a href="encourage_women.html" style="text-decoration:none" ><span
-        class="chapter">Woman Perspective</span></a>
-        </p>
+        <p>I want to create timer interrupts. To test that I will write
+        a small program to print a sentence every 5 seconds. I wasted a
+        lot of time because I thought I need to look in the <a
+        href="https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc">RISCV
+        ACLINT Specification</a>, which was an interesting read but made
+        everything more compplicated. For a simple system, the
+        privilidged ISA contains enaough information.</p>
+        <p>So, what we need to know is that there is a memory-mapped
+        <em>mtime</em> register that contains the time and is increments
+        at a constant frequency. There is also a memory-mapped
+        <em>mtimecmp</em> register, which can hold a value that will be
+        compared with <em>mtime</em>. If the value in <em>mtimecmp</em>
+        is equal or less than the value in <em>mtime</em>, an interrupt
+        will be triggered. This interrupt will be pending until
+        <em>mtimecmp</em> is greater than <em>mtime</em> again. For
+        this, interrupts need to be enabled.</p>
+        <p>First I will try to access <em>mtime</em> just by it’s name,
+        without finding out the address, as that’s how I understand the
+        example code in the specification.</p>
     </div>
     <script>
         function switch_mode() {
