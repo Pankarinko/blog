@@ -124,6 +124,22 @@
                     chapter[i].style.transition = "all 0.4s ease";
                 }
             }
+            var code = document.querySelectorAll("div.sourceCode"); 
+            if (code.length !== null) {
+                for (var i = 0; i < code.length; i++) {
+                    code[i].style.transition = "all 0.4s ease";
+                }
+            }
+            var keywords = document.querySelectorAll(".keyword"); 
+            if (keywords.length !== null) {
+                for (var i = 0; i < keywords.length; i++) {
+                    keywords[i].style.transition = "all 0.4s ease";
+                }
+            }
+            var b = document.querySelectorAll(".button"); 
+            for (var i = 0; i < b.length; i++) {
+                b[i].style.transition = "all 0.4s ease";
+            }
             if (document.body.classList.toggle('dark_mode')) {
                 localStorage.setItem('mode', 'dark');
             } else {

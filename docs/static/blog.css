@@ -18,19 +18,21 @@ body {
     --sidebar_color_pushed: rgb(177, 147, 211);
     --font-hover:  #7b6792;
     --font-pushed: #BFB0CF;
+    --code-bg: rgb(89, 77, 94);
 }
 
 .dark_mode {
     --bg_color: #120629;
     --font_color: #d8d7db;
     --head_color: #9482D5;
-    --link: #a8cdc1;
-    --link_visited: #0daf7c;
+    --link: #4dd1a7;
+    --link_visited: #8ed8c1;
     --sidebar_color: #231f32;
     --sidebar_color_hover: #403b50;
     --sidebar_color_pushed: #140f25;
     --font-hover:  #ccb1e9;
     --font-pushed: #010002;
+    --code-bg: #312847;
 }
 
 .profile-container {
@@ -100,6 +102,15 @@ body {
     justify-content: center;
 }
 
+.keyword {
+    display: inline-block;
+    height: 19px;
+    background: var(--sidebar_color);
+    border-radius: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+}
 
     
 .sidebar {
@@ -144,6 +155,13 @@ h1 {
     color: var(--head_color);
 }
 
+h2 {
+    font-size: 30px;
+    font-family: 'Encode_Sans_SC';
+    color: var(--head_color);
+    margin-top: 4%;
+}
+
 h3 {
     padding: 30px;
     font-size: 26px;
@@ -168,7 +186,7 @@ div.sourceCode {
     box-shadow: 3px 6px 30px #01000265;
     padding: 2rem;
     overflow: auto;
-    background-color: #302d33 !important;
+    background-color: var(--code-bg) !important;
 }
 
 th,
