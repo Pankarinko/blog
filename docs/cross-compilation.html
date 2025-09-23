@@ -78,59 +78,79 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */</style>
         <span class="button" onclick="switch_mode()">Switch Mode</span>
     </div>
     <div class="container">
-        <p>This was the first and unfortunately most fucked up part of
-        the whole thing so far. Here is the code I have so far in the
-        <em>script.ld</em> file:</p>
+        <h1 id="cross-compilation">Cross-compilation</h1>
+        <h2 id="choosing-the-target">Choosing the target</h2>
+        <p>First, I needed to figure out how I compile code for RISCV.
+        In my original project, I aimed to write code that would work on
+        both the 64 bit and 32 bit RISCV architectures with primary
+        focus on 64 bit. I will probably do my new project similarly,
+        but in the beginning I will just try to get it to run.</p>
+        <p>Rust already supports cross-compilation to <a
+        href="https://doc.rust-lang.org/beta/rustc/platform-support.html">multiple
+        RISCV architectures</a>.</p>
+        <p>Since my aim is to write an operating system, I don’t want to
+        have one already - so I choose <code class="keyword">none</code>
+        as operating system. I don’t need any standard library support
+        at the moment becasue I suspect that adhering to any ABI would
+        just make the beginning more complicated (also the only other
+        option is <code class="keyword">musl</code> anyway) - so I use
+        <code class="keyword">elf</code>, which specifies the object
+        file format, but in this case, basically means no ABI.</p>
+        <p>With all this, it seems like I have two options:
+        <code class="keyword">riscv64gc-unknown-none-elf</code> and
+        <code class="keyword">riscv64imac-unknown-none-elf</code>. The
+        only difference between the two architectures is that RISCV64GC
+        supports floating point arithmetic and RISCV64IMAC doesn’t. I
+        will probably not need floating points for my code but the
+        userspace programs might, so I will support both architectures
+        (I think this should be fairly easy to do).</p>
+        <p>By the way, though irrelevant in this case, I found out that
+        <code class="keyword">unknown</code> here represents the chip/OS
+        vendor if relevant (this wasn’t so easy to find, big thanks to
+        <a
+        href="https://mcyoung.xyz/2025/04/14/target-triples/">mcyoung</a>).</p>
+        <h2 id="building-the-project">Building the project</h2>
+        <p>Now that I know my compilation target, I need to get rust
+        toolchain to compile the project for this target. For that, I
+        need to install the target first. Installing a new platform to
+        rustc’s compilation targets is actually very simple - with the
+        command <code class="keyword">rustup target add TARGET</code>,
+        where I replace <code class="keyword">TARGET</code> with
+        <code class="keyword">riscv64gc-unknown-none-elf</code>.</p>
+        <p>The <a
+        href="https://rust-lang.github.io/rustup/cross-compilation.html">rustup
+        book</a> will tell you that you can compile for RISCV64 by
+        building the project with an extra target flag. This is however
+        too much work for the amount of compilations I want to do. So I
+        will make my job easier. There are two ways I can do that.</p>
+        <p>The first option is to write a bash script with a shorter
+        name (even shorter than cargo build) that simply contains the
+        command with the right target flag, as such:</p>
         <div class="sourceCode" id="cb1"><pre
-        class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ENTRY<span class="op">(</span>asm_entry<span class="op">)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>OUTPUT_ARCH<span class="op">(</span>riscv<span class="op">)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>MEMORY <span class="op">{</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    RAM <span class="op">(</span>rwx<span class="op">)</span> <span class="op">:</span> org <span class="op">=</span> <span class="bn">0x80000000</span><span class="op">,</span> len <span class="op">=</span> <span class="dv">1</span><span class="er">M</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>PHDRS <span class="op">{</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  text PT_LOAD<span class="op">;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>SECTIONS <span class="op">{</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a> <span class="op">.</span>text <span class="op">:</span> <span class="op">{</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span> <span class="op">=</span> ALIGN<span class="op">(</span><span class="dv">8</span><span class="op">);</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    PROVIDE<span class="op">(</span>startkernel <span class="op">=</span> <span class="op">.);</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">*(.</span>text<span class="op">)</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">*(.</span>text<span class="op">*)</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    PROVIDE<span class="op">(</span>endkernel <span class="op">=</span> <span class="op">.);</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a> <span class="op">}</span> <span class="op">&gt;</span> RAM <span class="op">:</span> text</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-        <h4 id="now-the-explanation">Now the explanation:</h4>
-        <p>The first line tells the linker that the code starts at the
-        label <em>asm_entry (found in entry.S)</em> The second line the
-        architecture to RISCV.</p>
-        <p>In the <strong>MEMORY</strong> section, I define all
-        addressess above 0x80000000 as RAM. This is the address from
-        which the RISCV architecture allows the OS and user space
-        programs to use memory - everything smaller than this address is
-        mapped to some device. My RAM is readable, writable and
-        executable (rwx) however at this point I know I will probably
-        need to define a new memory section that is not writable for the
-        kernel, because kernel code shouldn’t reside in writable
-        memory.</p>
-        <p><strong>PHDRS</strong> defines ELF program headers <em>(see
-        also <a
-        href="https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_node/ld_23.html">here</a></em>.
-        I only have one memory segment so far, <em>.text</em>.
-        <em>PT_LOAD</em> means, that this segment has to be loaded from
-        a file.</p>
-        <p>The <strong>SECTIONS</strong> part describes all the segments
-        our memory will have. Again, at this point I only have some
-        kernel code so I only have the <em>.text</em> segment, where the
-        kernel code is. The address of the beginning of this segment is
-        saved into the variable <em>startkernel</em>, the address of the
-        end is saved into the variable <em>endkernel</em>. These
-        variables will be used in the C-code later. The segment is
-        aligned by 8 Bytes because I write this OS for RISCV64.
-        <em>.text</em> will be placed in the RAM memory section.</p>
+        class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#! /bin/bash</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cargo</span> build <span class="at">--target</span><span class="op">=</span>riscv64gc-unknown-none-elf</span></code></pre></div>
+        <p>This is practical since I might want to compile my code for
+        RISCV64GC, RISCV64IMAC and some kind of RISCV32 respectively and
+        I could put all necessary commands in the same bash script.</p>
+        <p>The second option is to change the default target by
+        modifying <code class="keyword">.cargo/config.toml</code> like
+        this:</p>
+        <div class="sourceCode" id="cb2"><pre
+        class="sourceCode rs"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[build]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">&quot;riscv64gc-unknown-none-elf&quot;</span></span></code></pre></div>
+        <p>This looks more elegant in my opinion, but I would still
+        probably need to write a bash script if I want to build for
+        multiple platforms. I am not sure which one will be more
+        practical in the future, but I will go with the script for now
+        since I chose a conveniently short name for it.</p>
+        <h2 id="compiling-for-qemu">Compiling for qemu</h2>
+        <p>I currently use <a href="https://github.com/qemu">qemu</a>, a
+        well-known system emulator, as a hardware alternative. In
+        qemu-RISCV64, the starting code is placed at address 0x80000000.
+        I copied the linker code and Assemnbler entry code I had from my
+        previous project in C (more on thos in the restective chapters)
+        which already manages this part for me.</p>
     </div>
     <script>
         function switch_mode() {
