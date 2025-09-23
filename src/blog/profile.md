@@ -1,8 +1,7 @@
 
 <div class="profile-container"><img class="profile" src="static/img/profile_circle.png"/></div>
 
-<p> I set out to write a simple operating system for RISCV just for fun. This blog describes all the steps (and missteps) I took
-
-Since I only came up with the idea of this blog after I already did some things - mainly to motivate myself - I will try to remember and summarize what I did.
+<p> 
+Profile picture was created with a [piccrew maker](https://picrew.me/ja/image_maker/626197) by *hunbloom*, who makes very cool drawings. [Check out her work!](https://www.instagram.com/hunbloom/?utm_medium=copy_link)
 </p>
    
