@@ -2,6 +2,8 @@
 
 This was the first and unfortunately most fucked up part of the whole thing so far. Here is the code I have so far in the *script.ld* file:
 
+This is a test.
+
 ```c
 ENTRY(asm_entry)
 OUTPUT_ARCH(riscv)
